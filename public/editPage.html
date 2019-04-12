@@ -1,0 +1,630 @@
+<!doctype html>
+<!--
+/***************************************************************************************************
+* File: edit.html
+* Date: 05/02/2017
+* Authors:
+* Rommel Trejo
+* Lillian Lam
+* Krunal Hirpara
+* Sarah Newkirk 
+* Andrew Maddox
+* Sherwin Fong
+*
+* Project: Bahama Oriole Application
+* Description: This page is used by search.html.
+*				- the key used (edit/html?key=<id>) is the ID used in DB
+*				- if id does not exist in db an error appears, handled by main.js
+*				- update works like this. first schedules firebase to upload then uploads
+*					they are two different processes.
+*
+* Known Issues: Works in Google Chrome and Mozilla Firefox. Behavior on MS Internet explorer is undefined.
+*****************************************************************************************************/
+-->
+
+<!--
+File: editPage.html
+Date: 05/03/2017
+Authors: <Author 1>
+ 	      Sherwin Fong
+ 	      <Author 3>
+Project: Bahama Oriole Application
+Description: This is the page that allows a user to modify an entry after
+					clicking on it from the search results page
+
+Known Issues: Works only in Google Chrome and Mozilla Firefox
+Known Issues: Works only in Google Chrome and Mozilla Firefox
+-->
+
+<html lang="en">
+	<head>
+<!-- No cache, may be -->
+        <meta http-equiv="cache-control" content="max-age=0" />
+        <meta http-equiv="cache-control" content="no-cache" />
+        <meta http-equiv="expires" content="0" />
+        <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+        <meta http-equiv="pragma" content="no-cache" />
+<!-- /No cache, may be -->
+
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="description" content="App for Bahama oriole Researchers to enter, edit, and view data">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Bahama Oriole App</title>
+        
+        
+  <!-- Web Application Manifest -->
+  <link rel="manifest" href="manifest.json">
+		
+		  <!-- Add to homescreen for Chrome on Android -->
+  		<meta name="mobile-web-app-capable" content="yes">
+  		<meta name="application-name" content="Bahama Oriole">
+		<meta name="theme-color" content="#303F9F">
+
+		  	  <!-- Add to homescreen for Safari on iOS -->
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<meta name="apple-mobile-web-app-title" content="Bahama Oriole">
+		<meta name="apple-mobile-web-app-status-bar-style" content="#303F9F">
+
+		  	<!-- App Styling -->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+		<link rel="stylesheet" href="styles/main.css">
+
+		  	 <!-- Bootstrap-->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+ 		  	 <!-- Optional Bootstrap theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+		<!-- Bootstrap-->
+        <!-- JQuery-->
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Bootstrap-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!-- Bootstrap-->
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
+<script>
+    // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCzWM256ZHIejtnPC9PB3uv3tKKVydgDFA",
+            authDomain: "bahama-oriole-app.firebaseapp.com",
+            databaseURL: "bahama-oriole-app.firebaseio.com",
+            storageBucket: "bahama-oriole-app.appspot.com",
+            messagingSenderId: "263717268269"
+        };
+       firebase.initializeApp(config);
+       </script>    
+
+        <!-- json form material-->
+        <script type="text/javascript" src="deps/underscore.js"></script>
+        <script type="text/javascript" src="lib/jsv.js"></script>
+        <script type="text/javascript" src="lib/jsonform.js"></script>
+    
+	</head>
+    
+    <!-- This is the navigation bar -->
+	<body>
+        <header id="user-container" >
+        <nav>
+  		<div>
+    		<div class="navbar-header">
+      			<a class="navbar-brand" href="./">Bahama Oriole Project</a>
+    		</div>
+    		<ul  class="nav navbar-nav">
+			
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Menu<span class="caret"></span></a>        		
+                    <ul id="navigation_bar" class="dropdown-menu">
+						<li><a href="./">Add Entry</a></li>
+						<li><a href="searchPage.html">Search</a></li>
+						<li><a href="#">Settings</a></li>
+					</ul>
+      			</li>
+				
+    		</ul>
+		</div>
+        <div id="leuser-container">
+            <div hidden id="user-pic"></div>
+	        <div hidden id="user-name"></div>
+	        <button hidden id="sign-out" > Sign-out </button>
+	        <button hidden id="sign-in">
+	          <i class="material-icons"> </i> Sign-in with Google/UMBC email
+	        </button>
+        </div>
+	</nav>
+        </header>
+		    
+		
+
+        <!-- form body-->
+		</br>
+
+	<!--This is exactly like what's in index.html, but will be modified to display
+		the data the user requested through getElementById in the js file-->
+
+	<div id="log_in_block" style="display: none;">
+    <h1 id=greeting_message>Please Sign In</h1>
+    <!--<img src="/images/bahamaoriole.png" id="image1"></img>-->
+</div>
+	<div id="submit_form">
+		<form class="form-horizontal" id="mainForm" method="get">
+			<!--name-->
+			<div class="form-group">
+                <label class="control-label col-sm-2" for="prevName">Name: </label>
+                <div class="col-sm-8">
+                    <input type="text" name ="name" class="form-control" id="prevName" required> 
+                </div>
+            </div>
+			<!--location-->
+			<div class="form-group">
+				<label class="control-label col-sm-2" for="locationField">Location: </label>
+					<div class="col-sm-8">
+                    <input type="text" name="location" class="form-control" id="locationField"> 
+                </div>
+			</div>
+			<!--date-->
+			<div class="form-group">
+                <label class="control-label col-sm-2" for="dateField">Date: </label>
+                <div class="col-sm-8">
+                    <input type="text" name="date" class="form-control" id="dateField"> 
+                </div>
+            </div>
+			<!--time-->
+             <div class="form-group">
+                <label class="control-label col-sm-2" for="dateField">Start Time: </label>
+                <div class="col-sm-8">
+                    <input type="text" name="start_time" class="form-control" id="dateTime"> 
+                </div>
+            </div>
+			<!--point #-->
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="pointField">Point Number: </label>
+                <div class="col-sm-8">
+                    <input type="text" name="location_point" class="form-control" id="pointField" required> 
+                </div>
+            </div>
+			<!--AG/2nd-->
+			<div class="form-group">
+                <label for="ag" class="control-label col-sm-2">AG/2nd:</label>
+                <div class="col-sm-2">
+                <select class="form-control" id="ag" name="a_g_2nd">
+                    <option value="0">0</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                    <option value="60">60</option>
+                    <option value="70">70</option>
+                    <option value="80">80</option>
+                    <option value="90">90</option>
+                    <option value="100">100</option>
+                  </select>
+                  </div>
+            </div>
+			<!--Coppice-->
+			<div class="form-group">
+                <label for="coppice" class="control-label col-sm-2">Coppice:</label>
+                <div class="col-sm-2">
+                <select class="form-control" id="coppice" name="coppice">
+                    <option value="0">0</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                    <option value="60">60</option>
+                    <option value="70">70</option>
+                    <option value="80">80</option>
+                    <option value="90">90</option>
+                    <option value="100">100</option>
+                  </select>
+                  </div>
+            </div>
+			<!--Developed-->
+			<div class="form-group">
+                <label for="developed" class="control-label col-sm-2">Developed:</label>
+                <div class="col-sm-2">
+                <select class="form-control" id="developed" name="developed">
+                    <option value="0">0</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                    <option value="60">60</option>
+                    <option value="70">70</option>
+                    <option value="80">80</option>
+                    <option value="90">90</option>
+                    <option value="100">100</option>
+                  </select>
+                  </div>
+            </div>			
+			<!--Mixed-->
+			<div class="form-group">
+                <label for="mixed" class="control-label col-sm-2">Mixed:</label>
+                <div class="col-sm-2">
+                <select class="form-control" id="mixed" name="mixed">
+                    <option value="0">0</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                    <option value="60">60</option>
+                    <option value="70">70</option>
+                    <option value="80">80</option>
+                    <option value="90">90</option>
+                    <option value="100">100</option>
+                  </select>
+                  </div>
+            </div>			
+			<!--Pine-->
+			<div class="form-group">
+                <label for="pine" class="control-label col-sm-2">Pine:</label>
+                <div class="col-sm-2">
+                <select class="form-control" id="pine" name="pine">
+                    <option value="0">0</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                    <option value="60">60</option>
+                    <option value="70">70</option>
+                    <option value="80">80</option>
+                    <option value="90">90</option>
+                    <option value="100">100</option>
+                  </select>
+                  </div>
+            </div>
+			<!--Wetland-->
+			<div class="form-group">
+                <label for="wetland" class="control-label col-sm-2">Wetland:</label>
+                <div class="col-sm-2">
+                <select class="form-control" id="wetland" name="wetland">
+                    <option value="0">0</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                    <option value="60">60</option>
+                    <option value="70">70</option>
+                    <option value="80">80</option>
+                    <option value="90">90</option>
+                    <option value="100">100</option>
+                  </select>
+                  </div>
+            </div>
+			<!--Habitat Notes-->
+             <div class="form-group">
+                <label class="control-label col-sm-2" for="notesField">Habitat Notes: </label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="notesField" name="habitat_noted"> 
+                </div>
+            </div>
+			<!--Observations-->
+			<div class="form-group">
+				<label class="control-label col-sm-2">Observations: </label>
+				<div class="col-sm-8">
+					<br>
+                    <span class="obs">
+						<label for="obsAnimal" style="display:block">Animal</label>
+						<select class="form-control obs" id="obsAnimal1" name="obsAnimal1">
+							<option value="---">---</option>
+							<option value="ASY">ASY</option>
+							<option value="SY">SY</option>
+							<option value="HY">HY</option>
+							<option value="Cat">Cat</option>
+							<option value="Dog">Dog</option>
+							<option value="CB">CB</option>
+							<option value="SW">SW</option>
+							<option value="HW">HW</option>
+							<option value="Unknown">???</option>
+						</select>
+					</span>
+					<span class="obs">
+						<label for="obsDetect" style="display:block">Detect</label>
+						<input type="text" class="form-control obs" id="obsDetect1" name="obsDetect1" size="1"> 
+					</span>
+					<span class="obs">
+						<label for="obsDistance" style="display:block">Distance</label>
+						<input type="text" class="form-control obs" id="obsDistance1" name="obsDistance1" size="1"> 
+					</span>
+					<span class="obs">
+						<label for="obsNotes" style="display:block">Notes</label>
+						<input type="text" class="form-control obs" id="obsNotes1" name="obsNotes1" size="5"> 
+					</span>
+					<br>
+					<span class="obs">
+						<select class="form-control obs" id="obsAnimal2" name="obsAnimal2">
+							<option value="---">---</option>
+							<option value="ASY">ASY</option>
+							<option value="SY">SY</option>
+							<option value="HY">HY</option>
+							<option value="Cat">Cat</option>
+							<option value="Dog">Dog</option>
+							<option value="CB">CB</option>
+							<option value="SW">SW</option>
+							<option value="HW">HW</option>
+							<option value="Unknown">???</option>
+						</select>
+					</span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsDetect2" name="obsDetect2" size="1"></span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsDistance2" name="obsDistance2" size="1"></span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsNotes2" name="obsNotes2" size="5"></span>
+					<br>
+					<span class="obs">
+						<select class="form-control obs" id="obsAnimal3" name="obsAnimal3">
+							<option value="---">---</option>
+							<option value="ASY">ASY</option>
+							<option value="SY">SY</option>
+							<option value="HY">HY</option>
+							<option value="Cat">Cat</option>
+							<option value="Dog">Dog</option>
+							<option value="CB">CB</option>
+							<option value="SW">SW</option>
+							<option value="HW">HW</option>
+							<option value="Unknown">???</option>
+						</select>
+					</span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsDetect3" name="obsDetect3" size="1"></span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsDistance3" name="obsDistance3" size="1"></span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsNotes3" name="obsNotes3" size="5"></span>
+					<br>
+					<span class="obs">
+						<select class="form-control obs" id="obsAnimal4" name="obsAnimal4">
+							<option value="---">---</option>
+							<option value="ASY">ASY</option>
+							<option value="SY">SY</option>
+							<option value="HY">HY</option>
+							<option value="Cat">Cat</option>
+							<option value="Dog">Dog</option>
+							<option value="CB">CB</option>
+							<option value="SW">SW</option>
+							<option value="HW">HW</option>
+							<option value="Unknown">???</option>
+						</select>
+					</span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsDetect4" name="obsDetect4" size="1"></span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsDistance4" name="obsDistance4" size="1"></span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsNotes4" name="obsNotes4" size="5"></span>
+					<br>                                                    
+					<span class="obs">
+						<select class="form-control obs" id="obsAnimal5" name="obsAnimal5">
+							<option value="---">---</option>
+							<option value="ASY">ASY</option>
+							<option value="SY">SY</option>
+							<option value="HY">HY</option>
+							<option value="Cat">Cat</option>
+							<option value="Dog">Dog</option>
+							<option value="CB">CB</option>
+							<option value="SW">SW</option>
+							<option value="HW">HW</option>
+							<option value="Unknown">???</option>
+						</select>
+					</span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsDetect5" name="obsDetect5" size="1"></span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsDistance5" name="obsDistance5" size="1"></span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsNotes5" name="obsNotes5" size="5"></span>
+
+					<br><br>
+					
+                    <span class="obs">
+						<label for="obsAnimal" style="display:block">Animal</label>
+						<select class="form-control obs" id="obsAnimal6" name="obsAnimal6">
+							<option value="---">---</option>
+							<option value="ASY">ASY</option>
+							<option value="SY">SY</option>
+							<option value="HY">HY</option>
+							<option value="Cat">Cat</option>
+							<option value="Dog">Dog</option>
+							<option value="CB">CB</option>
+							<option value="SW">SW</option>
+							<option value="HW">HW</option>
+							<option value="Unknown">???</option>
+						</select>
+					</span>
+					<span class="obs">
+						<label for="obsDetect" style="display:block">Detect</label>
+						<input type="text" class="form-control obs" id="obsDetect6" name="obsDetect6" size="1"> 
+					</span>
+					<span class="obs">
+						<label for="obsDistance" style="display:block">Distance</label>
+						<input type="text" class="form-control obs" id="obsDistance6" name="obsDistance6" size="1"> 
+					</span>
+					<span class="obs">
+						<label for="obsNotes" style="display:block">Notes</label>
+						<input type="text" class="form-control obs" id="obsNotes6" name="obsNotes6" size="5"> 
+					</span>
+					<br>
+					<span class="obs">
+						<select class="form-control obs" id="obsAnimal7" name="obsAnimal7">
+							<option value="---">---</option>
+							<option value="ASY">ASY</option>
+							<option value="SY">SY</option>
+							<option value="HY">HY</option>
+							<option value="Cat">Cat</option>
+							<option value="Dog">Dog</option>
+							<option value="CB">CB</option>
+							<option value="SW">SW</option>
+							<option value="HW">HW</option>
+							<option value="Unknown">???</option>
+						</select>
+					</span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsDetect7" name="obsDetect7" size="1"></span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsDistance7" name="obsDistance7" size="1"></span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsNotes7" name="obsNotes7" size="5"></span>
+					<br>
+					<span class="obs">
+						<select class="form-control obs" id="obsAnimal8" name="obsAnimal8">
+							<option value="---">---</option>
+							<option value="ASY">ASY</option>
+							<option value="SY">SY</option>
+							<option value="HY">HY</option>
+							<option value="Cat">Cat</option>
+							<option value="Dog">Dog</option>
+							<option value="CB">CB</option>
+							<option value="SW">SW</option>
+							<option value="HW">HW</option>
+							<option value="Unknown">???</option>
+						</select>
+					</span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsDetect8" name="obsDetect8" size="1"></span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsDistance8" name="obsDistance8" size="1"></span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsNotes8" name="obsNotes8" size="5"></span>
+					<br>
+					<span class="obs">
+						<select class="form-control obs" id="obsAnimal9" name="obsAnimal9">
+							<option value="---">---</option>
+							<option value="ASY">ASY</option>
+							<option value="SY">SY</option>
+							<option value="HY">HY</option>
+							<option value="Cat">Cat</option>
+							<option value="Dog">Dog</option>
+							<option value="CB">CB</option>
+							<option value="SW">SW</option>
+							<option value="HW">HW</option>
+							<option value="Unknown">???</option>
+						</select>
+					</span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsDetect9" name="obsDetect9" size="1"></span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsDistance9" name="obsDistance9" size="1"></span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsNotes9" name="obsNotes9" size="5"></span>
+					<br>                                                    
+					<span class="obs">
+						<select class="form-control obs" id="obsAnimal10" name="obsAnimal10">
+							<option value="---">---</option>
+							<option value="ASY">ASY</option>
+							<option value="SY">SY</option>
+							<option value="HY">HY</option>
+							<option value="Cat">Cat</option>
+							<option value="Dog">Dog</option>
+							<option value="CB">CB</option>
+							<option value="SW">SW</option>
+							<option value="HW">HW</option>
+							<option value="Unknown">???</option>
+						</select>
+					</span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsDetect10" name="obsDetect10" size="1"></span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsDistance10" name="obsDistance10" size="1"></span>
+					<span class="obs"><input type="text" class="form-control obs" id="obsNotes10" name="obsNotes10" size="5"></span>
+                </div>
+			</div>
+			<!--Cocount Trees-->
+			<div class="form-group">
+                <label for="coconut" class="control-label col-sm-2">No. of Coconut Trees:</label>
+                <div class="col-sm-2">
+                <select class="form-control" id="coconut" name="num_cocos">
+                    <option value="0">0</option>
+                    <option value="1-4">1-4</option>
+                    <option value="5-10">5-10</option>
+                    <option value="11-20">11-20</option>
+                    <option value="21-50">21-50</option>
+                    <option value="51-100+">51-100+</option>
+                </select>
+                </div>
+            </div>
+			<!--Pine Trees-->
+            <div class="form-group">
+                <label for="numPine" class="control-label col-sm-2">No. of Pine Trees:</label>
+                <div class="col-sm-2">
+                <select class="form-control" id="numPine" name="num_pine">
+                    <option value="0">0</option>
+                    <option value="1-4">1-4</option>
+                    <option value="5-10">5-10</option>
+                    <option value="11-20">11-20</option>
+                    <option value="21-50">21-50</option>
+                    <option value="51-100+">51-100+</option>
+                </select>
+                </div>
+            </div>
+			<!--Deadpine Trees-->
+            <div class="form-group">
+                <label for="deadpine" class="control-label col-sm-2">No. of Deadpine Trees:</label>
+                <div class="col-sm-2">
+                <select class="form-control" id="deadpine" name="num_dead_pine">
+                     <option value="0">0</option>
+                    <option value="1-4">1-4</option>
+                    <option value="5-10">5-10</option>
+                    <option value="11-20">11-20</option>
+                    <option value="21-50">21-50</option>
+                    <option value="51-100+">51-100+</option>
+                </select>
+                </div>
+            </div>
+			<!--Thatch-->
+            <div class="form-group">
+                <label for="thatch" class="control-label col-sm-2">No. of Thatch:</label>
+                <div class="col-sm-2">
+                <select class="form-control" id="thatch" name="num_thatch">
+                    <option value="0">0</option>
+                    <option value="1-4">1-4</option>
+                    <option value="5-10">5-10</option>
+                    <option value="11-20">11-20</option>
+                    <option value="21-50">21-50</option>
+                    <option value="51-100+">51-100+</option>
+                </select>
+                </div>
+            </div>
+			<!--Pine Unverstory-->
+            <div class="form-group">
+                <label for="understory" class="control-label col-sm-2">Pine Understory:</label>
+                <div class="col-sm-2">
+                <select class="form-control" id="understory" name="pine_understory">
+                    <option value="0-1m">0-1m</option>
+                    <option value="1-2m">1-2m</option>
+                    <option value="2-5m">2-5m</option>
+                    <option value="N/A">N/A</option>
+                </select>
+                </div>
+			</div>
+			<!--Understory Notes-->
+			 <div class="form-group">
+                <label class="control-label col-sm-2" for="understoryField">Understory Notes: </label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="understoryField" name="understory_Notes"> 
+                </div>
+            </div>
+			<!--Cloud-->
+			 <div class="form-group">
+                <label for="cloud" class="control-label col-sm-2">Cloud</label>
+                <div class="col-sm-2">
+                <select class="form-control" id="cloud" name="weather">
+                    <option value="Clear">Clear</option>
+                    <option value="50 to 94% cloudy">50 to 94% cloudy</option>
+                    <option value=">95% cloudy">> 95% cloudy</option>
+                </select>
+                </div>
+            </div>
+			<!--Wind-->
+			 <div class="form-group">
+                <label for="wind" class="control-label col-sm-2">Wind</label>
+                <div class="col-sm-2">
+                <select class="form-control" id="wind" name="wind">
+                    <option value="Calm">Calm</option>
+                    <option value="1-3km/h">1-3 km/h</option>
+                    <option value="3-5km/h">3-5 km/h</option>
+                    <option value="5-7km/h">5-7 km/h</option>
+                    <option value="7-10km/h">7-10 km/h</option>
+                    <option value="10+km/h">10+ km/h</option>
+                </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+					<div id="submit-status"> </div> 
+                    <button type="submit" class="btn btn-default" id="submitForm">Update</button>
+                </div>
+            </div>
+		</form>	
+	</div>
+
+
+	
+        <!-- init -->
+		<script  src="lib/main.js"></script>    
+	</body>
+</html>
