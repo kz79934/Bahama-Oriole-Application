@@ -1,0 +1,2 @@
+# Bahama-Oriole-Application
+Researchers in the Bahamas need a convenient web application for entering data and recording data based on their location. Currently, researchers are using printed forms to record the data by hand, which is a time-consuming method. The Bahama Orioles Application will provide researchers with a convenient and reliable application that allows them to collect data easily and quickly. Currently in Progress.
